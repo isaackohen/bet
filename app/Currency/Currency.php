@@ -185,7 +185,8 @@ abstract class Currency {
             new Tether(),
             new BNB(),
             new Dogecoin(),
-            new USDCoin()
+            new USDCoin(),
+            new Bonus()
         ];
     }
 

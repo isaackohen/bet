@@ -72,12 +72,9 @@ class C27Controller extends Controller
         if (strlen($slug) > 50){
             return redirect('/');
         }
-
-        $sanitize = preg_replace("/[\/\{\}\)\(\%#\$]/", "sanitize", $slug);
-
-
-        $url = $sanitize;
-        $view = view('provider')->with('url', $url);
+            $sanitize = preg_replace("/[\/\{\}\)\(\%#\$]/", "sanitize", $slug);
+            $url = $sanitize;
+            $view = view('provider')->with('url', $url);
         return view('layouts.app')->with('page', $view);
     }
 
@@ -97,16 +94,13 @@ class C27Controller extends Controller
         $mascotbonusid = env('mascotbonusid');
         $mascotbankgroup = env('mascotbankgroup');
         $mascotbonusbankgroup = env('mascotbonusbankgroup');
-
         $user = auth()->user();
         $freespinslot = \App\Settings::where('name', 'freespin_slot')->first()->value;
 
         if (strlen($slug) > 50){
             return redirect('/');
         }
-
         $slugsanitize = preg_replace("/[\/\{\}\)\(\%#\$]/", "sanitize", $slug);
-
         if (!$user) {
             return redirect('/');
         }
@@ -115,16 +109,12 @@ class C27Controller extends Controller
                 'user_id' => $user->id, 's' => $slugsanitize, 'b' => 0,
             ]);
         }
-                //Log::critical($content->method);
-
             $provider = \App\Slotslist::where('_id', $slugsanitize)->first()->p;
             if($provider == 'mascot') {
                 if($slugsanitize == $freespinslot && $user->freegames > 0) {
-                
-
-                 $this->client->mascot->setPlayer(['Id' => $user->id . '-' . 'eth' . '-' . $mascotbonusid , 'BankGroupId' => $mascotbonusbankgroup]);
-             usleep(11000);
-        $this->client->mascot->setBonus([   
+                $this->client->mascot->setPlayer(['Id' => $user->id . '-' . 'eth' . '-' . $mascotbonusid , 'BankGroupId' => $mascotbonusbankgroup]);
+                    usleep(11000);
+                $this->client->mascot->setBonus([   
                     'Id' => 'shared',   
                     'FsType' => 'original', 
                     'CounterType' => 'shared',  
@@ -149,9 +139,8 @@ class C27Controller extends Controller
                 ]   
             );  
             } else {
-
                 $this->client->mascot->setPlayer(['Id' => $user->id . '-' . auth()->user()->clientCurrency()->id() . '-' . $mascotid , 'BankGroupId' => $mascotbankgroup]);
-                usleep(11000);
+                    usleep(11000);
                 $game = $this->client->mascot->createSession(
                 [
                     'GameId' => $slugsanitize,
@@ -160,20 +149,16 @@ class C27Controller extends Controller
                     'RestorePolicy' => 'Restore'
                 ]
             );
-            }
-
-
-                        
-
-        $url = $game['SessionUrl'] . '/?' . $slugsanitize;
-        $view = view('c27')->with('data', $game)->with('url', $url);
+            }                       
+            $url = $game['SessionUrl'] . '/?' . $slugsanitize;
+            $view = view('c27')->with('data', $game)->with('url', $url);
         return view('layouts.app')->with('page', $view);
 
 } else {
        if($slugsanitize == $freespinslot && $user->freegames > 0) {
        if(auth()->user()->access == 'moderator') {
             $this->client->setPlayer(['Id' => $user->id . '-' . 'eth' . '-' . $mainbonusid , 'BankGroupId' => $mainbonusgroup]);
-                                    usleep(11000);
+                    usleep(11000);
             $this->client->setBonus([   
                     'Id' => 'shared',   
                     'FsType' => 'original', 
@@ -200,10 +185,9 @@ class C27Controller extends Controller
                 ]   
              );  
              }
-
         else {
             $this->client->setPlayer(['Id' => $user->id . '-' . 'eth' . '-' . $mainid , 'BankGroupId' => $mainbankgroup]);
-        usleep(11000);
+                    usleep(11000);
             $this->client->setBonus([   
                     'Id' => 'shared',   
                     'FsType' => 'original', 
@@ -232,10 +216,10 @@ class C27Controller extends Controller
         }
         }
         else {
-       if(auth()->user()->access == 'moderator') {
-            $this->client->setPlayer(['Id' => $user->id . '-' . auth()->user()->clientCurrency()->id() . '-' . $mainbonusid , 'BankGroupId' => $mainbonusgroup]);
-                usleep(11000);
-            $game = $this->client->createSession(
+            if(auth()->user()->access == 'moderator') {
+                $this->client->setPlayer(['Id' => $user->id . '-' . auth()->user()->clientCurrency()->id() . '-' . $mainbonusid , 'BankGroupId' => $mainbonusgroup]);
+                    usleep(11000);
+                $game = $this->client->createSession(
                 [
                     'GameId' => $slugsanitize,
                     'StaticHost' => $staticserver,
@@ -245,10 +229,9 @@ class C27Controller extends Controller
                 ]
             );
              }
-
             else {
                 $this->client->setPlayer(['Id' => $user->id . '-' . auth()->user()->clientCurrency()->id() . '-' . $mainid , 'BankGroupId' => $mainbankgroup]);
-        usleep(11000);
+                    usleep(11000);
                 $game = $this->client->createSession(
                 [
                     'GameId' => $slugsanitize,
@@ -260,18 +243,17 @@ class C27Controller extends Controller
             );
         }
         }
-
-        if($user->freegames > 0 && $slugsanitize == $freespinslot) {
-        $url = 'https://' . $game['SessionId'] . '.spins.sh/?' . $slugsanitize;
+            if($user->freegames > 0 && $slugsanitize == $freespinslot) {
+                $url = 'https://' . $game['SessionId'] . '.spins.sh/?' . $slugsanitize;
         }
+
         else {
-
-        $url = 'https://' . $game['SessionId'] . '.spins.sh/?' . $slugsanitize;
+                $url = 'https://' . $game['SessionId'] . '.spins.sh/?' . $slugsanitize;
+            }
+                $view = view('c27')->with('data', $game)->with('url', $url);
+                usleep(150000);
+            return view('layouts.app')->with('page', $view);
         }
-        $view = view('c27')->with('data', $game)->with('url', $url);
-        usleep(150000);
-        return view('layouts.app')->with('page', $view);
-}
     }
     /**
      * @param Request $request
@@ -287,10 +269,9 @@ class C27Controller extends Controller
         $user = $this->getUser($playerName[0]);
         if(\App\Statistics::where('_id', $user->id)->first() == null) {
             $a = \App\Statistics::create([
-                '_id' => $user->id, 'bets_btc' => 0, 'wins_btc' => 0, 'loss_btc' => 0, 'wagered_btc' => 0, 'profit_btc' => 0, 'bets_eth' => 0, 'wins_eth' => 0, 'loss_eth' => 0, 'wagered_eth' => 0, 'profit_eth' => 0, 'bets_ltc' => 0, 'wins_ltc' => 0, 'loss_ltc' => 0, 'wagered_ltc' => 0, 'profit_ltc' => 0, 'bets_doge' => 0, 'wins_doge' => 0, 'loss_doge' => 0, 'wagered_doge' => 0, 'profit_doge' => 0, 'bets_bch' => 0, 'wins_bch' => 0, 'loss_bch' => 0, 'wagered_bch' => 0, 'profit_bch' => 0, 'bets_trx' => 0, 'wins_trx' => 0, 'loss_trx' => 0, 'wagered_trx' => 0, 'profit_trx' => 0, 'bets_xrp' => 0, 'wins_xrp' => 0, 'loss_xrp' => 0, 'wagered_xrp' => 0, 'profit_xrp' => 0, 'bets_bnb' => 0, 'wins_bnb' => 0, 'loss_bnb' => 0, 'wagered_bnb' => 0, 'profit_bnb' => 0, 'bets_usdt' => 0, 'wins_usdt' => 0, 'loss_usdt' => 0, 'wagered_usdt' => 0, 'profit_usdt' => 0, 'bets_usdc' => 0, 'wins_usdc' => 0, 'loss_usdc' => 0, 'wagered_usdc' => 0, 'profit_usdc' => 0
+                '_id' => $user->id, 'bets_btc' => 0, 'wins_btc' => 0, 'loss_btc' => 0, 'wagered_btc' => 0, 'profit_btc' => 0, 'bets_eth' => 0, 'wins_eth' => 0, 'loss_eth' => 0, 'wagered_eth' => 0, 'profit_eth' => 0, 'bets_ltc' => 0, 'wins_ltc' => 0, 'loss_ltc' => 0, 'wagered_ltc' => 0, 'profit_ltc' => 0, 'bets_doge' => 0, 'wins_doge' => 0, 'loss_doge' => 0, 'wagered_doge' => 0, 'profit_doge' => 0, 'bets_bch' => 0, 'wins_bch' => 0, 'loss_bch' => 0, 'wagered_bch' => 0, 'profit_bch' => 0, 'bets_trx' => 0, 'wins_trx' => 0, 'loss_trx' => 0, 'wagered_trx' => 0, 'profit_trx' => 0, 'bets_xrp' => 0, 'wins_xrp' => 0, 'loss_xrp' => 0, 'wagered_xrp' => 0, 'profit_xrp' => 0, 'bets_bnb' => 0, 'wins_bnb' => 0, 'loss_bnb' => 0, 'wagered_bnb' => 0, 'profit_bnb' => 0, 'bets_usdt' => 0, 'wins_usdt' => 0, 'loss_usdt' => 0, 'wagered_usdt' => 0, 'profit_usdt' => 0, 'bets_usdc' => 0, 'wins_usdc' => 0, 'loss_usdc' => 0, 'wagered_usdc' => 0, 'profit_usdc' => 0, 'bets_bonus' => 0, 'wins_bonus' => 0, 'loss_bonus' => 0, 'wagered_bonus' => 0, 'profit_bonus' => 0
             ]);
         }
-
         $stats = \App\Statistics::where('_id', $user->id)->first();
         $balance = $user->balance(Currency::find($currency))->get();    
         if ($user->freegames > 0) {   
@@ -331,6 +312,8 @@ class C27Controller extends Controller
             $balanceB = (int)((((string)$balance) * \App\Http\Controllers\Api\WalletController::rateDollarUsdc()) * 100);
         } elseif ($currency == 'xrp' || $currency == 'XRP') {
             $balanceB = (int)((((string)$balance) * \App\Http\Controllers\Api\WalletController::rateDollarXrp()) * 100);
+        } elseif ($currency == 'bonus' || $currency == 'BONUS') {
+            $balanceB = (int)((((string)$balance) * \App\Http\Controllers\Api\WalletController::rateDollarBonus()) * 100);
         } elseif ($currency == 'usdt' || $currency == 'USDT') {
             $balanceB = (int)((((string)$balance) * \App\Http\Controllers\Api\WalletController::rateDollarUsdt()) * 100);
         } elseif ($currency == 'ltc' || $currency == 'LTC') {
@@ -340,8 +323,6 @@ class C27Controller extends Controller
         } elseif ($currency == 'eth' || $currency == 'ETH') {
             $balanceB = (int)((((string)$balance) * \App\Http\Controllers\Api\WalletController::rateDollarEth()) * 100);
         }
-
-
 
         if ($currency == 'btc') {
             $subtract = bcdiv($content->params->withdraw, \App\Http\Controllers\Api\WalletController::rateDollarBtc() * 100, 8);
@@ -356,7 +337,6 @@ class C27Controller extends Controller
         } elseif ($currency == 'ltc' || $currency == 'LTC') {
             $subtract = bcdiv($content->params->withdraw, \App\Http\Controllers\Api\WalletController::rateDollarLtc() * 100, 8);
             $add = bcdiv($content->params->deposit, \App\Http\Controllers\Api\WalletController::rateDollarLtc() * 100, 8);
-
         } elseif ($currency == 'usdt' || $currency == 'USDT') {
             $subtract = bcdiv($content->params->withdraw, \App\Http\Controllers\Api\WalletController::rateDollarUsdt() * 100, 8);
             $add = bcdiv($content->params->deposit, \App\Http\Controllers\Api\WalletController::rateDollarUsdt() * 100, 8);
@@ -369,6 +349,9 @@ class C27Controller extends Controller
         } elseif ($currency == 'xrp' || $currency == 'XRP') {
             $subtract = bcdiv($content->params->withdraw, \App\Http\Controllers\Api\WalletController::rateDollarXrp() * 100, 8);
             $add = bcdiv($content->params->deposit, \App\Http\Controllers\Api\WalletController::rateDollarXrp() * 100, 8);
+        } elseif ($currency == 'bonus' || $currency == 'BONUS') {
+            $subtract = bcdiv($content->params->withdraw, \App\Http\Controllers\Api\WalletController::rateDollarBonus() * 100, 8);
+            $add = bcdiv($content->params->deposit, \App\Http\Controllers\Api\WalletController::rateDollarBonus() * 100, 8);
         } elseif ($currency == 'bch' || $currency == 'BCH') {
             $subtract = bcdiv($content->params->withdraw, \App\Http\Controllers\Api\WalletController::rateDollarBtcCash() * 100, 8);
             $add = bcdiv($content->params->deposit, \App\Http\Controllers\Api\WalletController::rateDollarBtcCash() * 100, 8);
@@ -401,6 +384,8 @@ class C27Controller extends Controller
             $balance = (int)((((string)$balance) * \App\Http\Controllers\Api\WalletController::rateDollarBnb()) * 100);
         } elseif ($currency == 'bch' || $currency == 'BCH') {
             $balance = (int)((((string)$balance) * \App\Http\Controllers\Api\WalletController::rateDollarBtcCash()) * 100);
+        } elseif ($currency == 'bonus' || $currency == 'BONUS') {
+            $balance = (int)((((string)$balance) * \App\Http\Controllers\Api\WalletController::rateDollarBonus()) * 100);
         } elseif ($currency == 'eth' || $currency == 'ETH') {
             $balance = (int)((((string)$balance) * \App\Http\Controllers\Api\WalletController::rateDollarEth()) * 100);
         }
@@ -418,8 +403,6 @@ class C27Controller extends Controller
         }
 
         $profit = (float) $add - $subtract;
-
-
 
         if($currency == 'doge'){
             $usd_wager = floatval(number_format($subtract * WalletController::rateDollarDoge(), 2, '.', ''));
@@ -479,6 +462,16 @@ class C27Controller extends Controller
                 'loss_btc' => $stats->loss_btc + ($profit > 0 ? ($multi < 1 ? 1 : 0) : 1),
                 'wagered_btc' => $stats->wagered_btc + $subtract,
                 'profit_btc' => $stats->profit_btc + ($profit > 0 ? ($multi < 1 ? -($subtract) : ($profit)) : -($subtract))
+            ]);
+        }
+        if($currency == 'bonus'){
+            $usd_wager = floatval(number_format($subtract * WalletController::rateDollarBonus(), 2, '.', ''));
+            $stats->update([
+                'bets_bonus' => $stats->bets_bonus + 1,
+                'wins_bonus' => $stats->wins_bonus + ($profit > 0 ? ($multi < 1 ? 0 : 1) : 0),
+                'loss_bonus' => $stats->loss_bonus + ($profit > 0 ? ($multi < 1 ? 1 : 0) : 1),
+                'wagered_bonus' => $stats->wagered_bonus + $subtract,
+                'profit_bonus' => $stats->profit_bonus + ($profit > 0 ? ($multi < 1 ? -($subtract) : ($profit)) : -($subtract))
             ]);
         }
 
@@ -543,18 +536,25 @@ class C27Controller extends Controller
             'currency' => strtolower($currency)
         ]);
         event(new \App\Events\LiveFeedGame($game, 10));
-
+                
+                if($user->bonus1 == '2' && $currency == 'bonus') {
+                    if($multi < 0.95 || $multi > 1.20) {
+                    if($usd_wager > floatval(0.15)) {
+                       $user->update([
+                        'bonus1_wager' => ($user->bonus1_wager ?? 0) + (float) $subtract
+                        ]);
+                        }
+                    }
+                }
 
             Leaderboard::insert($game);
-            if($usd_wager > floatval(0.05)) {
-            if($multi < 0.95 || $multi > 1.25) {
-                Races::insert($game);
-
-
-            if ((Currency::find($currency)->dailyminslots() ?? 0) <= $subtract) {
-             if ($user->vipLevel() > 0 && ($user->weekly_bonus ?? 0) < 100) {
-                $user->update([
-                    'weekly_bonus' => ($user->weekly_bonus ?? 0) + 0.1
+            if($usd_wager > floatval(0.10)) {
+                if($multi < 0.95 || $multi > 1.25) {
+                    Races::insert($game);
+                    if ((Currency::find($currency)->dailyminslots() ?? 0) <= $subtract) {
+                        if ($user->vipLevel() > 0 && ($user->weekly_bonus ?? 0) < 100) {
+                        $user->update([
+                        'weekly_bonus' => ($user->weekly_bonus ?? 0) + 0.1
                 ]);
                }
              }
@@ -603,6 +603,8 @@ class C27Controller extends Controller
                 $balance = (int)((((string)$balance) * \App\Http\Controllers\Api\WalletController::rateDollarBnb()) * 100);
             } elseif ($currency == 'usdt' || $currency == 'USDT') {
                 $balance = (int)((((string)$balance) * \App\Http\Controllers\Api\WalletController::rateDollarUsdt()) * 100);
+            } elseif ($currency == 'bonus' || $currency == 'BONUS') {
+                $balance = (int)((((string)$balance) * \App\Http\Controllers\Api\WalletController::rateDollarBonus()) * 100);
             } elseif ($currency == 'usdc' || $currency == 'USDC') {
                 $balance = (int)((((string)$balance) * \App\Http\Controllers\Api\WalletController::rateDollarUsdc()) * 100);
             } elseif ($currency == 'bch' || $currency == 'BCH') {

@@ -2,7 +2,7 @@
 
 use App\Settings;
 use App\Http\Controllers\Api\WalletController;
-
+use App\User;
 use Illuminate\Support\Facades\Log;
 use Nbobtc\Command\Command;
 use App\Currency\Option\WalletOption;
@@ -37,7 +37,11 @@ class BitcoinCash extends V17RPCBitcoin {
         $dailyslotsbet = \App\Settings::where('name', 'dailybonus_minbet_slots')->first()->value;
         return floatval(number_format(($dailyslotsbet / \App\Http\Controllers\Api\WalletController::rateDollarBtcCash()), 7, '.', ''));
     }
-
+   public function convertBonus(): float {
+        $user = auth()->user();
+        $getbonus = $user->balance(\App\Currency\Currency::find('bonus'))->get();
+        return floatval(number_format(($getbonus / \App\Http\Controllers\Api\WalletController::rateDollarBtcCash()), 7, '.', ''));
+    }
     public function dailyminbet(): float {
         $dailyminbet = \App\Settings::where('name', 'dailybonus_minbet')->first()->value;
         return floatval(number_format(($dailyminbet / \App\Http\Controllers\Api\WalletController::rateDollarBtcCash()), 7, '.', ''));

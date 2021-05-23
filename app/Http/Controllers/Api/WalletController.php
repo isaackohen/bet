@@ -26,7 +26,12 @@ class WalletController extends Controller
 		$price = $value->BTC->USD;
         return $price;
     }
-	
+	public static function rateDollarBonus() {
+        return '1.00';
+    } 
+    public static function rateDollarBonusEur() {
+        return '0.80';
+    } 
 	public static function rateDollarBtcCash() {
         $value = self::apiRates();
 		$price = $value->BCH->USD;

@@ -15,6 +15,34 @@ $.on('/bonus', function() {
         }
     });
 
+
+    $('.bo1').on('click', function() {
+            $.request('offers/bonus1').then(function() {
+                $.success($.lang('bonus.offers.bonus1started'));
+            }, function(error) {
+                if(error === 1) $.error($.lang('bonus.offers.invalid'));
+            });
+        });
+
+    $('.bo1-complete').on('click', function() {
+            $.setCurrency('eth');
+            $.request('offers/bonus1complete').then(function() {
+                $.success($.lang('bonus.offers.bonnus1completed'));
+            }, function(error) {
+                if(error === 1) $.error($.lang('bonus.offers.invalid'));
+            });
+        });
+
+    $('.bo1-forfeit').on('click', function() {
+            $.request('offers/bonus1forfeit').then(function() {
+                $.success($.lang('bonus.offers.bonus1forfeit'));
+            }, function(error) {
+                if(error === 1) $.error($.lang('bonus.offers.invalid'));
+            });
+        });
+
+
+
     $('[data-toggle-bonus-sidebar]').on('click', function() {
         if($.isGuest()) {
             $.auth();

@@ -122,7 +122,7 @@
                                                 $wageredusd = number_format((\App\Http\Controllers\Api\WalletController::rateDollarUsdc() * $wagered), 3, '.', '');
                                                 $profit = $statistics->profit_usdc;
                                             }
-                                            if($currency->name() == 'bnb'){
+                                            if($currency->name() == 'BNB'){
                                                 $bets = $statistics->bets_bnb;
                                                 $wins = $statistics->wins_bnb;
                                                 $loss = $statistics->loss_bnb;
@@ -177,7 +177,7 @@
 												$wagered = $statistics->wagered_trx;
 												$wageredusd = number_format((\App\Http\Controllers\Api\WalletController::rateDollarTron() * $wagered), 3, '.', '');
                                                 $profit = $statistics->profit_trx;
-											}
+											}                                        
 										@endphp
                                             <tr>
                                                 <th>

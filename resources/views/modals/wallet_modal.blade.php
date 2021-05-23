@@ -160,13 +160,20 @@
                 </div>
                 <div class="modal-scrollable-content">
                     <div data-wallet-tab-content="deposit">
+
                         <select id="currency-selector-deposit" style="min-width: 200px;">
                             @foreach(\App\Currency\Currency::all() as $currency)
+                            @if($currency->id() == "bonus") 
+                            @else
                             <option value="{{ $currency->id() }}" data-icon="{{ $currency->icon() }}" data-style="{{ $currency->style() }}">
                                 {{ $currency->name() }}
                             </option>
+                            @endif
                             @endforeach
                         </select>
+                                            @if(auth()->user()->bonus1 == "0" || auth()->user()->bonus1 == null)
+                        <div class="alert alert-info mb-4 mt-2 p-2 text-center" role="alert">Get 100% bonus on your deposit, activate <b>Deposit Doubler Bonus</b>, check out our <b><a href="/bonus/" target="_blank">bonus page</a></b>.</div>
+                        @endif
                         <div class="walletNotification" style="display: none">
                             <div class="icon">
                                 <i class="fal fa-exclamation-triangle"></i>
@@ -188,9 +195,12 @@
                     <div data-wallet-tab-content="withdraw" style="display: none">
                         <select class="currency-selector-withdraw">
                             @foreach(\App\Currency\Currency::all() as $currency)
+                            @if($currency->id() == "bonus") 
+                            @else
                             <option value="{{ $currency->id() }}" data-icon="{{ $currency->icon() }}" data-style="{{ $currency->style() }}">
                                 {{ number_format(auth()->user()->balance($currency)->get(), 8, '.', '') }}
                             </option>
+                            @endif
                             @endforeach
                         </select>
                         <div id="withdraw-address"></div>

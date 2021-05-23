@@ -641,6 +641,14 @@ $(document).ready(function() {
                 Intercom('trackEvent', 'deposited');
                 $.playSound('/sounds/guessed.mp3');
             })     
+
+            .listen('BonusCredited', function(e) {
+                $.success($.lang('general.notifications.bonuscredited', { sum: bitcoin(e.amount, 'btc').to($.unit()).value().toFixed(8), currency: e.currency }));
+                Intercom('trackEvent', 'deposited');
+                $.setCurrency('bonus');
+                $.playSound('/sounds/guessed.mp3');
+                window.location.href = '/bonus';
+            })  
             .listen('BalanceModification', function(e) {
             const display = function() {
                 $(`[data-currency-value="${e.currency}"]`).html(bitcoin(e.balance, 'btc').to($.unit()).value().toFixed(8));

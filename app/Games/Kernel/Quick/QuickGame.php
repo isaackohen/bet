@@ -45,7 +45,7 @@ abstract class QuickGame extends Game {
 
 			if(\App\Statistics::where('_id', $data->user()->_id)->first() == null) {
 				$a = \App\Statistics::create([
-					'_id' => $data->user()->_id, 'bets_btc' => 0, 'wins_btc' => 0, 'loss_btc' => 0, 'wagered_btc' => 0, 'profit_btc' => 0, 'bets_eth' => 0, 'wins_eth' => 0, 'loss_eth' => 0, 'wagered_eth' => 0, 'profit_eth' => 0, 'bets_ltc' => 0, 'wins_ltc' => 0, 'loss_ltc' => 0, 'wagered_ltc' => 0, 'profit_ltc' => 0, 'bets_doge' => 0, 'wins_doge' => 0, 'loss_doge' => 0, 'wagered_doge' => 0, 'profit_doge' => 0, 'bets_bch' => 0, 'wins_bch' => 0, 'loss_bch' => 0, 'wagered_bch' => 0, 'profit_bch' => 0, 'bets_trx' => 0, 'wins_trx' => 0, 'loss_trx' => 0, 'wagered_trx' => 0, 'profit_trx' => 0
+					'_id' => $data->user()->_id, 'bets_btc' => 0, 'wins_btc' => 0, 'loss_btc' => 0, 'wagered_btc' => 0, 'profit_btc' => 0, 'bets_eth' => 0, 'wins_eth' => 0, 'loss_eth' => 0, 'wagered_eth' => 0, 'profit_eth' => 0, 'bets_ltc' => 0, 'wins_ltc' => 0, 'loss_ltc' => 0, 'wagered_ltc' => 0, 'profit_ltc' => 0, 'bets_doge' => 0, 'wins_doge' => 0, 'loss_doge' => 0, 'wagered_doge' => 0, 'profit_doge' => 0, 'bets_bch' => 0, 'wins_bch' => 0, 'loss_bch' => 0, 'wagered_bch' => 0, 'profit_bch' => 0, 'bets_trx' => 0, 'wins_trx' => 0, 'loss_trx' => 0, 'wagered_trx' => 0, 'profit_trx' => 0, 'bets_bonus' => 0, 'wins_bonus' => 0, 'loss_bonus' => 0, 'wagered_bonus' => 0, 'profit_bonus' => 0
 				]);
 			}
 
@@ -61,6 +61,16 @@ abstract class QuickGame extends Game {
 				'profit_btc' => $stats->profit_btc + ($result->profit() > 0 ? ($result->multiplier() < 1 ? -($data->bet()) : ($result->profit())) : -($data->bet()))
             ]);
 			}
+            if($currency == 'bonus'){
+            $usd_wager = floatval(number_format($data->bet() * WalletController::rateDollarBonus(), 2, '.', ''));
+            $stats->update([
+                'bets_bonus' => $stats->bets_bonus + 1,
+                'wins_bonus' => $stats->wins_bonus + ($result->profit() > 0 ? ($result->multiplier() < 1 ? 0 : 1) : 0),
+                'loss_bonus' => $stats->loss_bonus + ($result->profit() > 0 ? ($result->multiplier() < 1 ? 1 : 0) : 1),
+                'wagered_bonus' => $stats->wagered_bonus + $data->bet(),
+                'profit_bonus' => $stats->profit_bonus + ($result->profit() > 0 ? ($result->multiplier() < 1 ? -($data->bet()) : ($result->profit())) : -($data->bet()))
+            ]);
+            }
 			if($currency == 'eth'){
             $usd_wager = floatval(number_format($data->bet() * WalletController::rateDollarEth(), 2, '.', ''));
 			$stats->update([
@@ -71,6 +81,46 @@ abstract class QuickGame extends Game {
 				'profit_eth' => $stats->profit_eth + ($result->profit() > 0 ? ($result->multiplier() < 1 ? -($data->bet()) : ($result->profit())) : -($data->bet()))
             ]);
 			}
+            if($currency == 'usdt'){
+            $usd_wager = floatval(number_format($data->bet() * WalletController::rateDollarUsdt(), 2, '.', ''));
+            $stats->update([
+                'bets_usdt' => $stats->bets_usdt + 1,
+                'wins_usdt' => $stats->wins_usdt + ($result->profit() > 0 ? ($result->multiplier() < 1 ? 0 : 1) : 0),
+                'loss_usdt' => $stats->loss_usdt + ($result->profit() > 0 ? ($result->multiplier() < 1 ? 1 : 0) : 1),
+                'wagered_usdt' => $stats->wagered_usdt + $data->bet(),
+                'profit_usdt' => $stats->profit_usdt + ($result->profit() > 0 ? ($result->multiplier() < 1 ? -($data->bet()) : ($result->profit())) : -($data->bet()))
+            ]);
+            }
+            if($currency == 'usdc'){
+            $usd_wager = floatval(number_format($data->bet() * WalletController::rateDollarUsdc(), 2, '.', ''));
+            $stats->update([
+                'bets_usdc' => $stats->bets_usdc + 1,
+                'wins_usdc' => $stats->wins_usdc + ($result->profit() > 0 ? ($result->multiplier() < 1 ? 0 : 1) : 0),
+                'loss_usdc' => $stats->loss_usdc + ($result->profit() > 0 ? ($result->multiplier() < 1 ? 1 : 0) : 1),
+                'wagered_usdc' => $stats->wagered_usdc + $data->bet(),
+                'profit_usdc' => $stats->profit_usdc + ($result->profit() > 0 ? ($result->multiplier() < 1 ? -($data->bet()) : ($result->profit())) : -($data->bet()))
+            ]);
+            }
+            if($currency == 'xrp'){
+            $usd_wager = floatval(number_format($data->bet() * WalletController::rateDollarXrp(), 2, '.', ''));
+            $stats->update([
+                'bets_xrp' => $stats->bets_xrp + 1,
+                'wins_xrp' => $stats->wins_xrp + ($result->profit() > 0 ? ($result->multiplier() < 1 ? 0 : 1) : 0),
+                'loss_xrp' => $stats->loss_xrp + ($result->profit() > 0 ? ($result->multiplier() < 1 ? 1 : 0) : 1),
+                'wagered_xrp' => $stats->wagered_xrp + $data->bet(),
+                'profit_xrp' => $stats->profit_xrp + ($result->profit() > 0 ? ($result->multiplier() < 1 ? -($data->bet()) : ($result->profit())) : -($data->bet()))
+            ]);
+            }
+            if($currency == 'bnb'){
+            $usd_wager = floatval(number_format($data->bet() * WalletController::rateDollarBnb(), 2, '.', ''));
+            $stats->update([
+                'bets_bnb' => $stats->bets_bnb + 1,
+                'wins_bnb' => $stats->wins_bnb + ($result->profit() > 0 ? ($result->multiplier() < 1 ? 0 : 1) : 0),
+                'loss_bnb' => $stats->loss_bnb + ($result->profit() > 0 ? ($result->multiplier() < 1 ? 1 : 0) : 1),
+                'wagered_bnb' => $stats->wagered_bnb + $data->bet(),
+                'profit_bnb' => $stats->profit_bnb + ($result->profit() > 0 ? ($result->multiplier() < 1 ? -($data->bet()) : ($result->profit())) : -($data->bet()))
+            ]);
+            }
 			if($currency == 'ltc'){
             $usd_wager = floatval(number_format($data->bet() * WalletController::rateDollarLtc(), 2, '.', ''));
 			$stats->update([
@@ -122,7 +172,7 @@ abstract class QuickGame extends Game {
                 'wager' => $data->bet(),
                 'multiplier' => $multiplierfloat,
                 'status' => $result->profit() > 0 ? ($result->multiplier() < 1 ? 'lose' : 'win') : 'lose',
-                'profit' => $result->profit(),
+                'profit' => $result->profit(), 
                 'server_seed' => $result->seed(),
                 'client_seed' => $this->client_seed(),
                 'nonce' => $result->nonce(),
@@ -131,11 +181,22 @@ abstract class QuickGame extends Game {
                 'currency' => $currency
             ]);
 
+                    if($data->user()->bonus1 == '2' && $currency == 'bonus') {
+                                    if($multiplierfloat < 0.95 || $multiplierfloat > 1.3 && $usd_wager > 0.1) {
 
+                        $data->user()->update([
+                        'bonus1_wager' => ($data->user()->bonus1_wager ?? 0) + (float) ($usd_wager / 2)
+                        ]);
+                       }
+                    }    
+                        
             Leaderboard::insert($game);
 
             if($multiplierfloat < 0.95 || $multiplierfloat > 1.3 && $usd_wager > 0.1) {
                 Races::insert($game);
+
+
+
 
             if (!$data->demo() && $data->user()->vipLevel() > 0 && ($data->user()->weekly_bonus ?? 0) < 100 && (Currency::find($data->currency())->dailyminbet() ?? 1) <= $data->bet()) {
                 $data->user()->update([

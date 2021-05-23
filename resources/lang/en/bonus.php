@@ -24,6 +24,12 @@ return [
     'partner' => [
         'description' => '<strong>Affiliate program</strong><br>Invite your friends to Bitsarcade.com and get a bonus!'
     ],
+    'offers' => [
+        'bonus1started' => 'Activated deposit offer, you can deposit now.',
+        'bonnus1completed' => 'Deposit offer completed and converted to your currency.',
+        'bonus1forfeit' => 'Forfeited bonus offer.'
+    ],
+
     'rain' => [
         'description' => '<strong>Rain</strong><br>Every few hours, an event occurs in the chat that distributes the bonus to random people.',
         'title' => 'Rain',

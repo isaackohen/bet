@@ -194,7 +194,6 @@ $notify = auth()->user()->unreadNotifications();
                 @endforeach
               </div>
             </div>
-
         <div class="games-box" style="z-index: 1;">
           @if(!auth()->guest())<div style="cursor: pointer; padding-top: 11px; padding-left: 15px; font-weight: 600;" class="action" onclick="$.displaySearchBar()"><i class="fas fa-search"></i></div>@endif
           <div id="customNav1123" class="owl-nav"></div>
@@ -223,16 +222,13 @@ $notify = auth()->user()->unreadNotifications();
               </div>
             </div>
 
-@if(!auth()->guest() || auth()->guest())
-
+                @if(!auth()->guest() || auth()->guest())
         <div class="games-box" style="z-index: 1;">
                           @if(!auth()->guest())<div style="cursor: pointer; padding-top: 11px; padding-left: 15px; font-weight: 600;" class="action" onclick="$.displaySearchBar()"><i class="fas fa-search"></i></div>@endif
-
           <div id="customNav55" class="owl-nav"></div>
           <h5 style="padding-top: 9px; padding-left: 7px; font-weight: 600;">Evoplay Games </h5>
             <button style="padding-top: 5px; font-size: 10px; padding-left: 10px;" onclick="redirect('/provider/evoplay')" class="btn btn-light m-2 p-1">NEW PROVIDER</a> </button>
             <button onclick="redirect('/provider/evoplay/')" style="padding-top: 5px; font-size: 10px; padding-left: 10px;" class="btn btn-primary m-2 p-1">More Evoplay<i class="fas fa-arrow-right" style="font-size: 8px;"></i></a></button>
-
           <div class="container-flex owl-carousel evoplay" style="z-index: 1;">
             @foreach(\App\Slotslist::get()->shuffle() as $slots)
             @if($slots->f == '5')
@@ -279,7 +275,6 @@ $notify = auth()->user()->unreadNotifications();
                     FAIR
                   </div>
                 </div>
-                
                 <div class="card-footer">
                   <h6 class="card-title">{{ $game->metadata()->name() }}</h5>
                   <small><span style="font-style: italic; font-size: 10px; color: #e5e6e7 !important; font-weight: 500; text-transform: capitalize;">{{ \App\Settings::where('name', 'platform_name')->first()->value }}</span></small></div>
@@ -315,8 +310,6 @@ $notify = auth()->user()->unreadNotifications();
                     @endforeach
                   </div>
                 </div>
-
-
               <div class="games-box" style="z-index: 1;">
                 @if(!auth()->guest())<div style="cursor: pointer; padding-top: 11px; padding-left: 15px; font-weight: 600;" class="action" onclick="$.displaySearchBar()"><i class="fas fa-search"></i></div>@endif
                 <div id="customNav2" class="owl-nav"></div>
@@ -332,7 +325,7 @@ $notify = auth()->user()->unreadNotifications();
               @else
               <div onclick="redirect('/slots/{{ $slots->id }}')" class="game_poster" style="background-image:url(/img/slots-wide/{{ $slots->p }}/{{ $slots->id }}.webp)">
               @endif
-                      @endif
+              @endif
                     </div>
                     <div class="card-footer">
                       <span class="game-card-name">{{ $slots->n }}</span><br>
@@ -367,8 +360,7 @@ $notify = auth()->user()->unreadNotifications();
                   @endforeach
                 </div>
               </div>
-                @endif
-                                      
+                @endif                                      
                 <div class="container-flex provider-carousel owl-carousel" style="z-index: 1;">
                   @foreach(\App\Providers::all()->shuffle()->random(18) as $providers)
                   <div class="card m-1" style="background: transparent !important; box-shadow: -3px -3px 8px 1px #11141fcf, 2px 2px 8px 0px #0d0d0dcf, inset 1px 1px 0px 0px #1f2330 !important;">
@@ -382,6 +374,4 @@ $notify = auth()->user()->unreadNotifications();
             <div class="line"></div>
                 @endif
               </div>
-
-
         </div>

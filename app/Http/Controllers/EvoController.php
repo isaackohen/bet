@@ -54,6 +54,8 @@ class EvoController extends Controller
                 $balanceA = floatval(number_format(($balance * \App\Http\Controllers\Api\WalletController::rateDollarTron()), 2, '.', ''));
         } elseif ($currency == 'ltc' || $currency == 'LTC') {
                 $balanceA = floatval(number_format(($balance * \App\Http\Controllers\Api\WalletController::rateDollarLtc()), 2, '.', ''));
+        } elseif ($currency == 'bonus' || $currency == 'BONUS') {
+                $balanceA = floatval(number_format(($balance * \App\Http\Controllers\Api\WalletController::rateDollarBonus()), 2, '.', ''));
         } elseif ($currency == 'bch' || $currency == 'BCH') {
                 $balanceA = floatval(number_format(($balance * \App\Http\Controllers\Api\WalletController::rateDollarBtcCash()), 2, '.', ''));
         } elseif ($currency == 'eth' || $currency == 'ETH') {
@@ -105,6 +107,8 @@ class EvoController extends Controller
             $cryptoamount = floatval(number_format(($amount / \App\Http\Controllers\Api\WalletController::rateDollarXrp()), 8, '.', ''));
         } elseif ($currency == 'ltc' || $currency == 'LTC') {
             $cryptoamount = floatval(number_format(($amount / \App\Http\Controllers\Api\WalletController::rateDollarLtc()), 8, '.', ''));
+        } elseif ($currency == 'bonus' || $currency == 'BONUS') {
+            $cryptoamount = floatval(number_format(($amount / \App\Http\Controllers\Api\WalletController::rateDollarBonus()), 8, '.', ''));
         } elseif ($currency == 'bch' || $currency == 'BCH') {            
             $cryptoamount = floatval(number_format(($amount / \App\Http\Controllers\Api\WalletController::rateDollarBtcCash()), 8, '.', ''));
         } elseif ($currency == 'eth' || $currency == 'ETH') {
@@ -127,6 +131,8 @@ class EvoController extends Controller
                 $balanceA = floatval(number_format(($balance * \App\Http\Controllers\Api\WalletController::rateDollarUsdt()), 2, '.', ''));
         } elseif ($currency == 'usdc' || $currency == 'USDC') {
                 $balanceA = floatval(number_format(($balance * \App\Http\Controllers\Api\WalletController::rateDollarUsdc()), 2, '.', ''));
+        } elseif ($currency == 'bonus' || $currency == 'BONUS') {
+                $balanceA = floatval(number_format(($balance * \App\Http\Controllers\Api\WalletController::rateDollarBonus()), 2, '.', ''));
         } elseif ($currency == 'xrp' || $currency == 'XRP') {
                 $balanceA = floatval(number_format(($balance * \App\Http\Controllers\Api\WalletController::rateDollarXrp()), 2, '.', ''));
         } elseif ($currency == 'ltc' || $currency == 'LTC') {
@@ -206,6 +212,8 @@ class EvoController extends Controller
             $cryptoamount = floatval(number_format(($amount / \App\Http\Controllers\Api\WalletController::rateDollarUsdt()), 8, '.', ''));
         } elseif ($currency == 'usdc' || $currency == 'USDC') {
             $cryptoamount = floatval(number_format(($amount / \App\Http\Controllers\Api\WalletController::rateDollarUsdc()), 8, '.', ''));
+        } elseif ($currency == 'bonus' || $currency == 'BONUS') {
+            $cryptoamount = floatval(number_format(($amount / \App\Http\Controllers\Api\WalletController::rateDollarBonus()), 8, '.', ''));
         } elseif ($currency == 'xrp' || $currency == 'XRP') {
             $cryptoamount = floatval(number_format(($amount / \App\Http\Controllers\Api\WalletController::rateDollarXrp()), 8, '.', ''));
         } elseif ($currency == 'bch' || $currency == 'BCH') {            
@@ -242,6 +250,17 @@ class EvoController extends Controller
                 if($multi < 0.95 || $multi > 1.25 && $getwagerdollar > 0.05) {
                 Races::insert($game);
 
+                
+                if($user->bonus1 == '2' && $currency == 'bonus') {
+                    if($multi < 0.95 || $multi > 1.20) {
+                    if($getwagerdollar > floatval(0.1)) {
+                       $user->update([
+                        'bonus1_wager' => ($user->bonus1_wager ?? 0) + (float) $getwagerdollar
+                        ]);
+                        }
+                    }
+                }
+
 
             if ((Currency::find($currency)->dailyminslots() ?? 0) <= $getwagerdollar) {
              if ($user->vipLevel() > 0 && ($user->weekly_bonus ?? 0) < 100) {
@@ -269,6 +288,8 @@ class EvoController extends Controller
                 $balanceA = floatval(number_format(($balance * \App\Http\Controllers\Api\WalletController::rateDollarBnb()), 2, '.', ''));
         } elseif ($currency == 'usdt' || $currency == 'USDT') {
                 $balanceA = floatval(number_format(($balance * \App\Http\Controllers\Api\WalletController::rateDollarUsdt()), 2, '.', ''));
+        } elseif ($currency == 'bonus' || $currency == 'BONUS') {
+                $balanceA = floatval(number_format(($balance * \App\Http\Controllers\Api\WalletController::rateDollarBonus()), 2, '.', ''));
         } elseif ($currency == 'usdc' || $currency == 'USDC') {
                 $balanceA = floatval(number_format(($balance * \App\Http\Controllers\Api\WalletController::rateDollarUsdc()), 2, '.', ''));
         } elseif ($currency == 'xrp' || $currency == 'XRP') {
@@ -315,6 +336,8 @@ class EvoController extends Controller
             $cryptoamount = floatval(number_format(($amount / \App\Http\Controllers\Api\WalletController::rateDollarBnb()), 8, '.', ''));
         } elseif ($currency == 'usdt' || $currency == 'USDT') {
             $cryptoamount = floatval(number_format(($amount / \App\Http\Controllers\Api\WalletController::rateDollarUsdt()), 8, '.', ''));
+        } elseif ($currency == 'bonus' || $currency == 'BONUS') {
+            $cryptoamount = floatval(number_format(($amount / \App\Http\Controllers\Api\WalletController::rateDollarBonus()), 8, '.', ''));
         } elseif ($currency == 'usdc' || $currency == 'USDC') {
             $cryptoamount = floatval(number_format(($amount / \App\Http\Controllers\Api\WalletController::rateDollarUsdc()), 8, '.', ''));
         } elseif ($currency == 'xrp' || $currency == 'XRP') {
@@ -350,6 +373,8 @@ class EvoController extends Controller
                 $balanceA = floatval(number_format(($balance * \App\Http\Controllers\Api\WalletController::rateDollarUsdc()), 2, '.', ''));
         } elseif ($currency == 'xrp' || $currency == 'XRP') {
                 $balanceA = floatval(number_format(($balance * \App\Http\Controllers\Api\WalletController::rateDollarXrp()), 2, '.', ''));
+        } elseif ($currency == 'bonus' || $currency == 'BONUS') {
+                $balanceA = floatval(number_format(($balance * \App\Http\Controllers\Api\WalletController::rateDollarBonus()), 2, '.', ''));
         } elseif ($currency == 'bch' || $currency == 'BCH') {
                 $balanceA = floatval(number_format(($balance * \App\Http\Controllers\Api\WalletController::rateDollarBtcCash()), 2, '.', ''));
         } elseif ($currency == 'eth' || $currency == 'ETH') {
