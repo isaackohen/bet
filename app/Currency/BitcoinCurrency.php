@@ -2,7 +2,7 @@
 
 use App\Currency\Option\WalletOption;
 use App\Http\Controllers\Api\WalletController;
-
+use App\User;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Nbobtc\Command\Command;

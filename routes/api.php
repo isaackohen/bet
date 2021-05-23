@@ -16,6 +16,7 @@ use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use MongoDB\BSON\Decimal128;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Log;
 
@@ -81,13 +82,9 @@ Route::get('callback/adgatemedia', function(Request $request) {
             'status' => 1,
             'sum' => $ethfloat,
         ]);
-
-
             return response('1', 200)
                 ->header('Content-Type', 'text/plain'); 
 });
-
-
 
 Route::get('callback/KcxVGsn', function(Request $request) {
             Log::notice(json_encode($request->all()));
@@ -156,11 +153,24 @@ Route::get('callback/KcxVGsn', function(Request $request) {
             ->where('status', 0)
             ->first();  
 
-    $user = \App\User::find($invoice->user);
-    $user->balance(\App\Currency\Currency::find($invoice->currency))->add($request->get('outcome_amount')); 
-        $invoice->update(['status' => 1, 'sum' => $request->get('outcome_amount')]);  
-            event(new DepositCredited($user));
+        $user = \App\User::find($invoice->user);
 
+        if($user->bonus1 == '1') {
+        $bonuscurrency = 'bonus';
+        $base = $invoice->dollar;
+        $bonususdamount = round($dollar * 2,2);
+        $bonusgoal = round($bonususdamount * 15,2);
+
+        $user->update(['bonus1' => 2, 'bonus1_currency' => $invoice->currency,'bonus1_goal' => $bonusgoal]);  
+        $user->balance(\App\Currency\Currency::find($bonuscurrency))->add($bonususdamount); 
+
+        } else {
+
+        $user->balance(\App\Currency\Currency::find($invoice->currency))->add($request->get('outcome_amount')); 
+        $invoice->update(['status' => 1, 'sum' => $request->get('outcome_amount')]);
+    }
+
+        event(new DepositCredited($user));
         return response('Ok', 200)  
             ->header('Content-Type', 'text/plain'); 
         }
@@ -303,7 +313,8 @@ Route::middleware('auth')->prefix('wallet')->group(function() {
         $invoice->update([
             'ledger' => $responseResult->pay_address,
             'min' => $responseResult->pay_amount,
-            'payid' => $responseResult->payment_id
+            'payid' => $responseResult->payment_id,
+            'dollar' => $responseResult->price_amount
         ]);
 
         auth()->user()->update([
@@ -435,6 +446,59 @@ Log::notice(json_encode($responsewithdraw));
     });
 });
 
+
+Route::middleware('auth')->prefix('offers')->group(function() {
+    Route::post('bonus1', function() {
+                $user = auth()->user();
+                if($user->bonus1 !== null) return reject(1, 'You are not eligible.');
+                if($user->bonus1 == '1') return reject(1, 'You are not eligible.');
+                if($user->bonus1 == '2') return reject(1, 'You are not eligible.');
+                if($user->bonus1 == '3') return reject(1, 'You are not eligible.');
+                if($user->bonus1 == '4') return reject(1, 'You are not eligible.');
+
+                $user->update([
+                   'bonus1' => '1'
+                ]);
+
+                return success([]);
+});
+
+
+    Route::post('bonus1forfeit', function() {
+                $user = auth()->user();
+                if($user->bonus1 == 0) return reject(1, 'You are not eligible.');
+                if($user->bonus1 == null) return reject(1, 'You are not eligible.');
+
+                $user->update([
+                   'bonus1' => '4'
+                ]);
+
+                return success([]);
+});
+
+    Route::post('bonus1complete', function() {
+                $user = auth()->user();
+                if($user->bonus1 == 0) return reject(1, 'You are not eligible.');
+                if($user->bonus1 == 1) return reject(1, 'You are not eligible.');
+
+                $currencyname = $user->bonus1_currency;
+                $currency = Currency::find($currencyname);
+                $currencyget = $user->balance($currency)->get();
+                $amount = $currency->convertBonus();
+          
+
+
+
+            auth()->user()->balance($currency)->add($amount, \App\Transaction::builder()->message('Double Deposit')->get());
+                $user->update([
+                    'bonus1' => '4',
+                    'bonus' => null,
+                    'bonus1_goal' => null,
+                    'bonus1_currency' => null
+                ]);
+                return success([]);
+});
+});
 
 
 Route::middleware('auth')->prefix('subscription')->group(function() {

@@ -34,10 +34,10 @@ class User extends \Jenssegers\Mongodb\Auth\User implements JWTSubject {
         'vk', 'fb', 'google', 'discord', 'register_ip', 'login_ip', 'register_multiaccount_hash', 'login_multiaccount_hash',
         'referral', 'referral_wager_obtained', 'referral_bonus_obtained', 'promocode_limit_reset', 'promocode_limit', 
 
-        'btc', 'ltc', 'eth', 'doge', 'bch', 'trx', 'bnb', 'usdt', 'usdc', 'xrp',
-        'demo_btc', 'demo_ltc', 'demo_eth', 'demo_doge', 'demo_bch', 'demo_trx', 'demo_xrp', 'demo_usdt', 'demo_usdc', 'demo_bnb',
-        'wallet_btc', 'wallet_ltc', 'wallet_eth', 'wallet_doge', 'wallet_bch', 'wallet_trx', 'wallet_xrp', 'wallet_usdt', 'wallet_usdc', 'wallet_bnb', 
-        'wallet_trx_private_key', 'freegames', 'freegames_balance', 'referral_balance_usd'
+        'btc', 'ltc', 'eth', 'doge', 'bch', 'trx', 'bnb', 'usdt', 'usdc', 'xrp', 'bonus',
+        'demo_btc', 'demo_ltc', 'demo_eth', 'demo_doge', 'demo_bch', 'demo_trx', 'demo_xrp', 'demo_usdt', 'demo_usdc', 'demo_bnb', 'demo_bonus',
+        'wallet_btc', 'wallet_ltc', 'wallet_eth', 'wallet_doge', 'wallet_bch', 'wallet_trx', 'wallet_xrp', 'wallet_usdt', 'wallet_usdc', 'wallet_bnb', 'wallet_bonus',
+        'wallet_trx_private_key', 'freegames', 'freegames_balance', 'referral_balance_usd', 'bonus1', 'bonus1_goal', 'bonus1_currency', 'bonus1_wager'
     ];
 
     /**
@@ -52,10 +52,10 @@ class User extends \Jenssegers\Mongodb\Auth\User implements JWTSubject {
         'register_ip', 'login_ip', 'register_multiaccount_hash', 'login_multiaccount_hash', 'vip_discord_notified',
         'referral', 'referral_wager_obtained', 'referral_bonus_obtained', 'promocode_limit_reset', 'promocode_limit',
 
-        'btc', 'ltc', 'eth', 'doge', 'bch', 'trx', 'bnb', 'usdt', 'usdc', 'xrp',
-        'demo_btc', 'demo_ltc', 'demo_eth', 'demo_doge', 'demo_bch', 'demo_trx', 'demo_xrp', 'demo_usdt', 'demo_usdc', 'demo_bnb',
-        'wallet_btc', 'wallet_ltc', 'wallet_eth', 'wallet_doge', 'wallet_bch', 'wallet_trx', 'wallet_xrp', 'wallet_usdt', 'wallet_usdc', 'wallet_bnb',
-        'wallet_trx_private_key'
+        'btc', 'ltc', 'eth', 'doge', 'bch', 'trx', 'bnb', 'usdt', 'usdc', 'xrp', 'bonus',
+        'demo_btc', 'demo_ltc', 'demo_eth', 'demo_doge', 'demo_bch', 'demo_trx', 'demo_xrp', 'demo_usdt', 'demo_usdc', 'demo_bnb', 'demo_bonus',
+        'wallet_btc', 'wallet_ltc', 'wallet_eth', 'wallet_doge', 'wallet_bch', 'wallet_trx', 'wallet_xrp', 'wallet_usdt', 'wallet_usdc', 'wallet_bnb', 'wallet_bonus',
+        'wallet_trx_private_key', 'bonus1', 'bonus1_wager', 'bonus1_currency', 'bonus1_wager'
     ];
 
     /**
@@ -156,6 +156,7 @@ class User extends \Jenssegers\Mongodb\Auth\User implements JWTSubject {
         $currency = Currency::all()[0];
         $vipLevel = 0;
         foreach(Currency::all() as $c) {
+            if($c->id() != 'bonus') {
             $w = DB::table('games')->where('user', $this->_id)->where('currency', $c->id())->where('demo', '!=', true)->where('game', '!=', 'plinko')->where('status', '!=', 'in-progress')->where('status', '!=', 'cancelled')->sum('wager');
             $level = 0;
 
@@ -182,7 +183,7 @@ class User extends \Jenssegers\Mongodb\Auth\User implements JWTSubject {
             $currency
         ];
     }
-
+}
     public function vipBonus(): float {
          $currency = Currency::find("eth");
         return floatval($currency->dailybonus()) * $this->vipLevel();

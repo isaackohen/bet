@@ -43,7 +43,11 @@ class Tether extends Currency {
         $dailyminbet = \App\Settings::where('name', 'dailybonus_minbet')->first()->value;
         return floatval(number_format(($dailyminbet / \App\Http\Controllers\Api\WalletController::rateDollarUsdt()), 7, '.', ''));
     }
-
+   public function convertBonus(): float {
+        $user = auth()->user();
+        $getbonus = $user->balance(\App\Currency\Currency::find('bonus'))->get();
+        return floatval(number_format(($getbonus / \App\Http\Controllers\Api\WalletController::rateDollarUsdt()), 7, '.', ''));
+    }
     public function emeraldvip(): float {
         $emeraldvip = \App\Settings::where('name', 'emeraldvip')->first()->value;
         return floatval(number_format(($emeraldvip / \App\Http\Controllers\Api\WalletController::rateDollarUsdt()), 7, '.', ''));

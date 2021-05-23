@@ -1,5 +1,89 @@
 <div class="container-fluid">
+@if(!auth()->guest())
+
+      <div class="bonus-box" style="max-width: 1200px;">
+          <h5 style="font-weight: 600;"><i style="color: #2367ff; margin-right: 7px;" class="fad fa-layer-plus"></i>       <button style="font-size: 8px !important;" onclick="redirect('/provider/mascot')" class="btn btn-light p-1 m-1">NEW</a> </button>
+         Your Bonus</h5>
+
+                  <div class="row">
+            <div class="col-12 col-sm-12 col-md-12">
+                <div class="bonus-box-small">
+                   <div class="text">
+                        <div class="header"><h5>Deposit Doubler Bonus</h5></div>
+                        @if(auth()->user()->bonus1 == '0' || auth()->user()->bonus1 == null)
+                        <p>First Deposit Bonus, only useable once, simply enable this bonus and deposit to double your first deposit 100%!</p>
+                        <p>Make sure to first activate this bonus and afterwards deposit. There is a 15x rollover wager requirement.</p>
+                        
+                        @elseif(auth()->user()->bonus1 == '1')
+                        <p>You have enabled the deposit doubler bonus, now simply deposit any crypto and in any amount.</p>
+                        <p>Please note you can only use this bonus once, so make good use of it.</p>
+
+                        @elseif(auth()->user()->bonus1 == '2')
+                        <p>Your deposit has been credited as BONUS$ balance. </p> 
+                        <p>After you have reached the wager goal, 15x of your initial bonus amount, come back here to exchange bonus back to your deposit currency.</p>
+                        <p>You can play with this bonus balance any games. Please note that wagers must be over 0.10$ to count to your wager goal, slots count 100% to your wager amount, any other game 50%.</p>
+
+                        @elseif(auth()->user()->bonus1 == '3')
+                        <p>You have reached the bonus requirement. Press button below to convert your bonus balance to your initial deposit currency. </p> 
+                        <p>You are free to withdraw afterwards.</p>
+
+                        @else
+                        <p>You have already completed this offer or you are not eligible to start this offer.</p>
+
+                        @endif
+                        <div class="box" style="padding: 5px">
+                        @if(auth()->user()->bonus1 == '0' || auth()->user()->bonus1 == null)
+                        <div class="btn btn-primary m-2 p-2 bo1" onclick="redirect('/bonus')">Activate</div>
+
+                        @elseif(auth()->user()->bonus1 == '1')
+                            <div class="btn btn-primary m-2 disabled p-2">Activated - Waiting for Deposit</div>
+                            <div class="btn btn-secondary m-2 bo1-forfeit p-2">Forfeit bonus</div>
+                        @elseif(auth()->user()->bonus1 == '2')
+
+                                                @if(auth()->user()->bonus1_wager > auth()->user()->bonus1_goal)
+                            <div class="btn btn-primary m-2 bo1-complete" onclick="redirect('/bonus')">Complete Bonus & Convert to {{ auth()->user()->bonus1_currency }}</div>
+                                                @else
+                            <div class="btn btn-primary m-2 p-2" onclick="$.setCurrency('bonus')">Balance: {{ auth()->user()->bonus ?? 0 }}$</div>
+                            <div class="btn btn-primary m-2 p-2 disabled">Bonus Wagered: {{ auth()->user()->bonus1_wager ?? 0 }}$</div>
+                            <div class="btn btn-primary m-2 disabled p-2">Bonus Goal: {{ auth()->user()->bonus1_goal ?? 0 }}$</div>
+                            <div class="btn btn-secondary m-2 bo1-forfeit p-2">Forfeit bonus</div>
+                                                @endif
+                        @elseif(auth()->user()->bonus1 == '3')
+
+                        @else
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+            <div class="col-12 col-sm-12 col-md-6">
+                <div class="bonus-box-small">
+                    <div class="banner-img">
+                        <div class="text" style=" height: 100%;">
+                            <div class="header"><h5>Promocode</h5></div>
+                            <p>Enter your Promocode. Find promocodes on <a onclick="redirect('{{ \App\Settings::where('name', 'discord_invite_link')->first()->value }}')"><u>Discord</u></a>.</p><div class="btn btn-primary m-1 p-1" data-toggle-bonus-sidebar="promo">Enter Code</div>
+                        </div>
+                    </div></div>
+                </div>
+                <div class="col-12 col-sm-12 col-md-6">
+                    <div class="bonus-box-small">
+                        <div class="banner-img">
+                            <div class="text" style=" height: 100%;">
+                                <div class="header"><h5>Faucet</h5></div>
+                                <p>Use our faucet once every 24 hours for 0.10$ to 1.00$.</p> <div class="btn btn-primary m-1 p-1" data-toggle-bonus-sidebar="wheel">Spin Wheel</div>
+                            </div>
+                            <div class="wheel-popup" style="display: none">
+                                {!! __('bonus.wheel.prompt') !!}
+                            </div></div>
+                        </div>
+                    </div>
+</div>
+        </div>
+@endif
+
     <div class="bonus-box" style="max-width: 1200px;">
+          <h5 style="font-weight: 600;"><i style="color: #2367ff; margin-right: 7px;" class="fad fa-layer-plus"></i>
+         Loyalty Rewards</h5>
         <div class="row">
             <div class="col-12 col-sm-12 col-md-6">
                 <div class="bonus-box-small">
@@ -12,42 +96,6 @@
                 </div>
             </div>
         </div>
-        <div class="col-12 col-sm-12 col-md-6">
-            <div class="bonus-box-small">
-                <div class="banner-img banner-welcome">
-                    <div class="text" style="background: linear-gradient(176deg, #0f121bf2, #1a1d29fc); height: 100%;">
-                        <div class="header"><h5>New Player Bonus</h5></div>
-                        <p>Deposit and get 200 free spins. Claim spins after wagering your deposit amount.</p>
-                        <a class="btn btn-primary m-1 p-1" data-mdb-toggle="collapse" href="#collapseExample" role="button" data-mdb-toggle="animation" data-mdb-animation-reset="true" data-mdb-animation="slide-in" aria-expanded="false" aria-controls="collapseExample">More Info</a>
-                    </div>
-                </div>
-                <div class="collapse mt-1 border border-warning p-3" id="collapseExample">
-                    <p>For every 1.00$ you get 2 Free Spins credited, so if your first deposit was 50$ you get 100 Free Spins. To claim your first player deposit spins, contact our live support.</p>
-                    <p>This only applies to new players, not to multi-accounts.</p>
-                    <button id="intercomopenlink" class="btn btn-primary p-2">Contact support after deposit</button>
-                </div>
-            </div></div>
-            <div class="col-12 col-sm-12 col-md-6">
-                <div class="bonus-box-small">
-                    <div class="banner-img banner-promocode">
-                        <div class="text" style="background: linear-gradient(176deg, #0f121bf2, #1a1d29fc); height: 100%;">
-                            <div class="header"><h5>Promocode</h5></div>
-                            <p>Our Discord & Telegram bot automatically dispurses promocodes for ETHEREUM <i class="{{ \App\Currency\Currency::find('eth')->icon() }}" style="color: {{ \App\Currency\Currency::find('eth')->style() }}"></i> coins, every 30 minutes.</p><div class="btn btn-primary m-1 p-1" data-toggle-bonus-sidebar="promo">Enter Code</div>
-                        </div>
-                    </div></div>
-                </div>
-                <div class="col-12 col-sm-12 col-md-6">
-                    <div class="bonus-box-small">
-                        <div class="banner-img banner-faucet">
-                            <div class="text" style="background: linear-gradient(176deg, #0f121bf2, #1a1d29fc); height: 100%;">
-                                <div class="header"><h5>Faucet</h5></div>
-                                <p>Spin the wheel faucet once every day for 0.10$ to 1.00$. No strings attached or any restricting wager requirements.</p> <div class="btn btn-primary m-1 p-1" data-toggle-bonus-sidebar="wheel">Spin Wheel</div>
-                            </div>
-                            <div class="wheel-popup" style="display: none">
-                                {!! __('bonus.wheel.prompt') !!}
-                            </div></div>
-                        </div>
-                    </div>
                     <div class="col-12 col-sm-12 col-md-6">
                         <div class="bonus-box-small">
                             <div class="banner-img banner-vip">

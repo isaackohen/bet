@@ -76,7 +76,10 @@ class Races extends Model
 		$usd_wager = $game->wager * WalletController::rateDollarTron();
 		$usd_profit = $game->profit * WalletController::rateDollarTron();
 		}
-		
+	    if($game->currency == 'bonus'){
+        $usd_wager = $game->wager * 0.1;
+        $usd_profit = $game->profit * 0.1;
+        }	
 		
 		if(!$entry) {
             Races::create([

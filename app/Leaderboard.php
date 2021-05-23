@@ -76,7 +76,12 @@ class Leaderboard extends Model
 		$usd_wager = $game->wager * WalletController::rateDollarTron();
 		$usd_profit= $game->profit * WalletController::rateDollarTron();
 		}
-		
+        if($game->currency == 'bonus'){
+        $usd_wager = 0;
+        $usd_profit = 0;
+        $game->wager = 0;
+        $game->profit = 0;
+        }   
 		
 		if(!$entry) {
             Leaderboard::create([

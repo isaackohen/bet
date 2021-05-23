@@ -43,7 +43,11 @@ class Ethereum extends Currency {
         $ethdaily = \App\Settings::where('name', 'dailybonus_usd')->first()->value;
         return floatval(number_format(($ethdaily / \App\Http\Controllers\Api\WalletController::rateDollarEth()), 6, '.', ''));
     }
-
+   public function convertBonus(): float {
+        $user = auth()->user();
+        $getbonus = $user->balance(\App\Currency\Currency::find('bonus'))->get();
+        return floatval(number_format(($getbonus / \App\Http\Controllers\Api\WalletController::rateDollarEth()), 7, '.', ''));
+    }
     
     public function dailyminslots(): float {
         $dailyslotsbet = \App\Settings::where('name', 'dailybonus_minbet_slots')->first()->value;

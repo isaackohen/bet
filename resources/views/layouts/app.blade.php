@@ -75,6 +75,8 @@
         'usdt' => ['dollar' => \App\Http\Controllers\Api\WalletController::rateDollarUsdt(), 'euro' => \App\Http\Controllers\Api\WalletController::rateDollarUsdtEur()],
         'usdc' => ['dollar' => \App\Http\Controllers\Api\WalletController::rateDollarUsdc(), 'euro' => \App\Http\Controllers\Api\WalletController::rateDollarUsdcEur()],
         'ltc' => ['dollar' => \App\Http\Controllers\Api\WalletController::rateDollarLtc(), 'euro' => \App\Http\Controllers\Api\WalletController::rateDollarLtcEur()],
+        'bonus' => ['dollar' => \App\Http\Controllers\Api\WalletController::rateDollarBonus(), 'euro' => \App\Http\Controllers\Api\WalletController::rateDollarBonusEur()],
+
         'iota' => ['dollar' => \App\Http\Controllers\Api\WalletController::rateDollarIota(), 'euro' => \App\Http\Controllers\Api\WalletController::rateDollarIotaEur()],
         'doge' => ['dollar' => \App\Http\Controllers\Api\WalletController::rateDollarDoge(), 'euro' => \App\Http\Controllers\Api\WalletController::rateDollarDogeEur()],
         'trx' => ['dollar' => \App\Http\Controllers\Api\WalletController::rateDollarTron(), 'euro' => \App\Http\Controllers\Api\WalletController::rateDollarTronEur()]
@@ -122,6 +124,9 @@
                 <div class="wallet">
                     <div class="wallet-switcher">
                         @foreach(\App\Currency\Currency::all() as $currency)
+                        @if($currency->id() == "bonus" && auth()->user()->bonus1 != "2") 
+
+                        @else
                         <div class="option" data-set-currency="{{ $currency->id() }}">
                             <div class="wallet-switcher-icon">
                                 <img src="/img/currency/svg/{{ $currency->id() }}.svg" style="width: 14px; height: 14px;">
@@ -134,6 +139,8 @@
                                 </span>
                             </div>
                         </div>
+                       @endif
+
                         @endforeach
                         <div class="option select-option">
                             <div class="wallet-switcher-icon">

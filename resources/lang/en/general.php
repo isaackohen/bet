@@ -174,6 +174,7 @@ return [
             'message' => 'Do not forget to add email address, otherwise you could lose access to your account! <a href="/user/'.(auth()->guest() ? '' : auth()->user()->_id).'#security">Add email address</a>'
         ],
         'depositcredited' => 'Your deposit has been credited.',
+        'bonuscredited' => 'Your deposit bonus has been credited.',
         'deposit' => 'Your deposit has entered blockchain and will be credited after 1 confirmation.'
     ],
     'fairness' => [
